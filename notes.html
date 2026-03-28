@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="notes-container page-padding">
+    <div class="notes-header">
+        <h2>{{ subject.title }}</h2>
+        <div class="subject-badges">
+            <span class="difficulty {{ subject.difficulty|lower }}">{{ subject.difficulty }}</span>
+            <span class="rating"><i class="fas fa-star text-gold"></i> {{ subject.rating }}</span>
+        </div>
+        <p class="subject-category">{{ subject.category }}</p>
+    </div>
+
+    <div class="study-tools">
+        <button id="relax-mode" class="btn btn-study-mode"><i class="fas fa-coffee"></i> Relax Mode</button>
+        <button id="deep-mode" class="btn btn-study-mode"><i class="fas fa-brain"></i> Deep Learning</button>
+        <button id="exam-mode" class="btn btn-study-mode"><i class="fas fa-clock"></i> Exam Mode</button>
+    </div>
+
+    <div class="notes-workspace" id="workspace">
+        <div class="editor-section">
+            <h3>Your Notes</h3>
+            <form action="{{ url_for('notes', subject_id=subject.id) }}" method="POST">
+                <textarea id="notes-content" name="content" class="notes-textarea" placeholder="Start typing your notes here..." required>{{ note.content if note else '' }}</textarea>
+                <div class="editor-actions">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Notes</button>
+                    {% if note %}
+                    <a href="{{ url_for('delete_note', subject_id=subject.id) }}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete these notes?');"><i class="fas fa-trash"></i> Delete</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+
+        <div class="ai-section">
+            <h3>AI Study Assistant</h3>
+            <p class="ai-desc">Get a quick review of your notes.</p>
+            <button id="generate-summary" class="btn btn-secondary" style="width: 100%; margin-bottom: 20px;">
+                <i class="fas fa-magic"></i> Generate AI Summary
+            </button>
+            <div id="ai-summary-result" class="ai-result-box" style="display: none;">
+                <h4>Summary:</h4>
+                <div id="summary-content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
