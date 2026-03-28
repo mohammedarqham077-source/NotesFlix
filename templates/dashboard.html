@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="dashboard-container page-padding">
+    <h2>Student Dashboard</h2>
+    
+    <div class="dashboard-layout">
+        <div class="user-profile">
+            <div class="profile-header">
+                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=E50914&color=fff&size=120" alt="{{ user.name }}" class="profile-large">
+                <div>
+                    <h3>{{ user.name }}</h3>
+                    <p class="text-muted">{{ user.email }}</p>
+                    <p class="student-id">ID: {{ user.student_id }}</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-book stat-icon"></i>
+                    <div class="stat-info">
+                        <h4>{{ total_notes }}</h4>
+                        <p>Total Notes</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-heart stat-icon"></i>
+                    <div class="stat-info">
+                        <h4>{{ user.my_list|length }}</h4>
+                        <p>Saved Subjects</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="recent-activity">
+            <h3>Recent Subjects</h3>
+            <div class="dashboard-subjects">
+                {% if user.my_list %}
+                    {% for subject in user.my_list[:4] %}
+                    <div class="dash-subject-item">
+                        <div class="item-icon {{ subject.category|lower|replace(' ', '-')|replace('&', 'and') }}">
+                            <i class="fas fa-cubes"></i>
+                        </div>
+                        <div class="item-details">
+                            <h4>{{ subject.title }}</h4>
+                            <p>{{ subject.category }}</p>
+                        </div>
+                        <a href="{{ url_for('notes', subject_id=subject.id) }}" class="btn btn-secondary btn-small">Study</a>
+                    </div>
+                    {% endfor %}
+                    {% if user.my_list|length > 4 %}
+                    <a href="{{ url_for('my_list') }}" class="view-all">View All {{ user.my_list|length }} Subjects <i class="fas fa-arrow-right"></i></a>
+                    {% endif %}
+                {% else %}
+                    <p class="text-muted">You haven't added any subjects to your list yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
